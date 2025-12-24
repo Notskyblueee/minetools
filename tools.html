@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevTools — By Notskyblueee</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',Segoe UI,Arial,sans-serif}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(180deg,#0b1220,#050a14);
+  color:#e6f1ff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:50px;
+}
+
+.hl{color:#4fd1ff;font-weight:600}
+
+header h1{
+  font-size:28px;
+  text-align:center;
+  margin-bottom:30px;
+  animation:fadeInDown 1s ease forwards;
+}
+
+nav{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin-bottom:30px;
+  flex-wrap:wrap;
+}
+
+nav button{
+  background:transparent;
+  border:2px solid rgba(79,209,255,.35);
+  color:#cdeeff;
+  padding:12px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+  transition:all 0.3s ease;
+}
+
+nav button:hover, nav button.active{
+  background:#0ea5e9;
+  color:#00121f;
+  transform:scale(1.05);
+}
+
+main{
+  width:100%;
+  max-width:1400px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:0 20px;
+  animation:fadeInUp 1s ease forwards;
+}
+
+section{
+  display:none;
+  width:100%;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all 0.4s ease;
+}
+
+section.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+.card{
+  background:rgba(10,20,40,.8);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:30px;
+  margin-bottom:30px;
+  width:100%;
+  animation:fadeInUp 0.6s ease forwards;
+}
+
+.title{
+  font-size:28px;
+  margin-bottom:10px;
+  text-align:center;
+}
+
+.subtitle{
+  opacity:.7;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+/* TEXTAREAS */
+textarea{
+  width:100%;
+  background:#050c18;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  padding:20px;
+  color:#e6f1ff;
+  resize:none;
+  cursor:pointer;
+  font-size:17px;
+  min-height:120px;
+}
+
+/* ROWS */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:15px;
+}
+
+/* SYMBOLS */
+.symbols{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
+  gap:18px;
+  justify-items:center;
+}
+
+.symbol{
+  background:#050c18;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  text-align:center;
+  padding:22px;
+  cursor:pointer;
+  font-size:28px;
+  transition:all 0.25s ease;
+}
+.symbol:hover{
+  background:#0ea5e9;
+  color:#00121f;
+  transform:scale(1.15) rotate(5deg);
+}
+
+/* COLOR CODES */
+.colors{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:16px;
+  justify-items:center;
+}
+
+.color{
+  border-radius:14px;
+  padding:18px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:600;
+  border:1px solid rgba(255,255,255,.15);
+  transition:all 0.3s ease;
+}
+.color:hover{
+  transform:scale(1.05);
+  border-color:#0ea5e9;
+}
+
+/* INVENTORY */
+.inv{
+  display:grid;
+  grid-template-columns:repeat(9,1fr);
+  gap:10px;
+  max-width:600px;
+  margin:auto;
+}
+
+.slot{
+  background:#0a1324;
+  border:2px solid #1e293b;
+  border-radius:8px;
+  height:58px;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:14px;
+  transition:all 0.2s ease;
+}
+.slot:hover{
+  border-color:#0ea5e9;
+  transform:scale(1.05);
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:18px;
+  opacity:.7;
+  border-top:1px solid rgba(255,255,255,.08);
+  margin-top:20px;
+}
+
+/* TOAST */
+#toast{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:#0ea5e9;
+  color:#00121f;
+  padding:12px 18px;
+  border-radius:10px;
+  opacity:0;
+  transition:.3s;
+  pointer-events:none;
+  font-weight:600;
+}
+#toast.show{opacity:1}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{
+  0%{opacity:0; transform:translateY(20px);}
+  100%{opacity:1; transform:translateY(0);}
+}
+@keyframes fadeInDown{
+  0%{opacity:0; transform:translateY(-20px);}
+  100%{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DevTools — By <span class="hl">Notskyblueee</span></h1>
+</header>
+
+<nav>
+  <button class="active" onclick="tab('small',this)">Small Font</button>
+  <button onclick="tab('symbols',this)">Minecraft Symbols</button>
+  <button onclick="tab('colors',this)">Color Codes</button>
+  <button onclick="tab('inventory',this)">Inventory Slots</button>
+</nav>
+
+<main>
+<!-- SMALL FONT -->
+<section id="small" class="active">
+  <div class="card">
+    <div class="title">Small Font Generator</div>
+    <div class="subtitle">Click output to copy</div>
+    <div class="row">
+      <textarea id="normal" placeholder="Type text..."></textarea>
+      <textarea id="smallOut" readonly placeholder="Converted text"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- SYMBOLS -->
+<section id="symbols">
+  <div class="card">
+    <div class="title">Minecraft Symbols</div>
+    <div class="symbols" id="sym"></div>
+  </div>
+</section>
+
+<!-- COLOR CODES -->
+<section id="colors">
+  <div class="card">
+    <div class="title">Minecraft Color Codes</div>
+    <div class="colors" id="colorsBox"></div>
+  </div>
+</section>
+
+<!-- INVENTORY -->
+<section id="inventory">
+  <div class="card">
+    <div class="title">📋 How to Use Slot Numbers</div>
+    <div class="subtitle">
+      This visual guide shows the exact slot numbers for a double chest (large chest) in Minecraft. Each slot is numbered from 0 to 53.<br>
+      Rows 1-3 (Slots 0-26): Upper chest half<br>
+      Rows 4-6 (Slots 27-53): Lower chest half<br>
+      Plugin Development: Use these numbers for inventory management
+    </div>
+    <div class="inv" id="inv"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  Made By <span class="hl">Notskyblueee</span> •
+  Discord <span class="hl">jami_pragyan</span> •
+  <span class="hl">pragyanpatragaming@gmail.com</span>
+</footer>
+
+<div id="toast">Copied!</div>
+
+<script>
+/* TABS */
+function tab(id,b){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+}
+
+/* COPY */
+function copyText(t){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(t).then(showToast);
+  }else{
+    const ta=document.createElement('textarea');
+    ta.value=t;document.body.appendChild(ta);
+    ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast();
+  }
+}
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),900);
+}
+
+/* SMALL FONT */
+const map={a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ғ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',q:'ǫ',r:'ʀ',s:'s',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',x:'x',y:'ʏ',z:'ᴢ'};
+normal.oninput=()=>smallOut.value=normal.value.toLowerCase().split('').map(c=>map[c]||c).join('');
+smallOut.onclick=()=>copyText(smallOut.value);
+
+/* SYMBOLS */
+const sym = document.getElementById('sym');
+const symbols = [
+  "☹","☻","☺","ツ","☚","☛","☜","☝","☞","☟","✍","✎","✌","❤","❥","♥","♡","❣",
+  "♨","☠","☮","☯","☪","☀","☣","☢","☭","♏","♒","♈","☂","☃","☁","♔","♕","♚",
+  "✿","❀","۞","❦","❧","❃","❂","❁","♠","♤","♣","♧","⚜","™","®","©","₪","★",
+  "☆","✮","✯","✪","✣","✤","✥","✲","❈","☄","✦","❉","✧","♱","♰","๑","♂","♀","☿",
+  "⋄","⋅","⋆","⋇","▣","▧","▨","▤","▥","▦","▩","▆","▇","▀","█","■","□","▢","▪","▫",
+  "↑","↓","→","←","↗","↘","↙","↖","↔","↕","⇨","◈","◆","◇","◊","⋘","⋙","⋚","⋛",
+  "⊙","◎","◯","◕","◐","◑","○","㊚","㊛","¤","∞","⌀","⌁","⌂","⌃","⌄","⌅","⌆","⌇",
+  "⌈","⌉","⌊","⌋","∃","∧","∠","∨","∩","⊂","⊃","∪","∀","Ξ","Γ","λ","Σ","Π","℘","ℑ",
+  "ℜ","ℵ","η","α","ј","¢","£","¥","€","¿","¡","½","⅓","⅔","¼","¾","⅛","⅜","⅝","⅞",
+  "ϟ","ψ","χ","δ","ω","σ","θ","ϵ","β","λ","μ","∫","∂","∇","≈","≡","⋮","⋯","⋰","⋱",
+  "⋲","⋳","⋴","⋵","⋶","⋷","⋸","⋹","⋺","⋻","≈","≠","≤","≥","⊥","⊤","⊨","⊩","⊪","⊫","⊬",
+  "⊭","⊮","⊯","♧","⚔","☢","☣","☮","✝","♯","♭","♮","♫","♩","♬","♪","✖","✗","✘","✕",
+  "✔","✚","✛","✜","✝","✞","✟","✠","✡","☸","☯","☦","☪","☮","☯","★","☆","✶","✷","✸",
+  "✹","✺","✻","✼","✽","✾","✿","❀","❁","❂","❃","❄","❅","❆","❇","❈","❉","❊","❋"
+];
+symbols.forEach(s=>{
+  let d=document.createElement('div');
+  d.className='symbol';
+  d.textContent=s;
+  d.onclick=()=>copyText(s);
+  sym.appendChild(d);
+});
+
+/* COLOR CODES */
+const colorsBox = document.getElementById('colorsBox');
+const colors=[
+  ["§0","Black","#000"],
+  ["§1","Dark Blue","#00A"],
+  ["§2","Dark Green","#0A0"],
+  ["§3","Dark Aqua","#0AA"],
+  ["§4","Dark Red","#A00"],
+  ["§5","Dark Purple","#A0A"],
+  ["§6","Gold","#FA0"],
+  ["§7","Gray","#AAA"],
+  ["§8","Dark Gray","#555"],
+  ["§9","Blue","#55F"],
+  ["§a","Green","#5F5"],
+  ["§b","Aqua","#5FF"],
+  ["§c","Red","#F55"],
+  ["§d","Light Purple","#F5F"],
+  ["§e","Yellow","#FF5"],
+  ["§f","White","#FFF"]
+];
+colors.forEach(c=>{
+  let d=document.createElement('div');
+  d.className='color';
+  d.style.background=c[2];
+  d.style.color=c[2]==="#000"?"#fff":"#000";
+  d.innerHTML=`${c[0]}<br>${c[1]}`;
+  d.onclick=()=>copyText(c[0]);
+  colorsBox.appendChild(d);
+});
+
+/* INVENTORY SLOTS - Double Chest 0-53 */
+const inv = document.getElementById('inv');
+for(let i=0;i<54;i++){
+  let d=document.createElement('div');
+  d.className='slot';
+  d.title="Slot "+i;
+  d.textContent = i;
+  d.onclick=()=>copyText(i);
+  inv.appendChild(d);
+}
+</script>
+</body>
+</html>
